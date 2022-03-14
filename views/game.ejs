@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/game.css' />
+</head>
+<body>
+<%
+if (result) {
+    if (result.success && result.msg) {
+        __append(`
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            let Toast1 = Swal.mixin({
+                toast: true,
+                position: 'top-right',
+                iconColor: 'white',
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            })
+            Toast1.fire({
+                icon: 'success',
+                title: \`${result.msg}\`
+                })
+            })
+        </script>
+    `)
+    } else if (result.msg) {
+        __append(`
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            let Toast1 = Swal.mixin({
+                toast: true,
+                position: 'top-right',
+                iconColor: 'white',
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            })
+            Toast1.fire({
+                icon: 'error',
+                title: \`${result.msg}\`
+                })
+            })
+    </script>
+    `)
+    }
+}
+%>
+<div class="homePage__button" onclick="window.location = '/'">
+    <div class="homePage__button--icon fa fa-home"></div>
+</div>
+<div class="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+</div>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    let socket = io();
+    let map;
+    socket.send({action: "join"});
+    socket.emit('join', "<%= result.nickname %>");
+    socket.emit('getStatus');
+    socket.on('status', (status) => {
+        console.log(status);
+        map = status.map;
+    })
+</script>
+<script type="module">
+    import { Canvas } from "./javascripts/canvas.js";
+    let canvas = new Canvas();
+    setInterval(() => {
+        canvas.update();
+    }, 1000/120)
+    setInterval(() => {
+        canvas.draw();
+    }, 1000/120)
+</script>
+
+</body>
+</html>
