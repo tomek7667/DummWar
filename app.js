@@ -13,12 +13,12 @@ const server = http.createServer(app);
 const title = "DummyWar";
 const port = 7780;
 const io = new Server(server);
-const con = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database : 'dummywar'
-});
+// const con = mysql.createConnection({
+//   host     : 'localhost',
+//   user     : 'root',
+//   password : '',
+//   database : 'dummywar'
+// });
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -97,14 +97,18 @@ io.on('connection', (socket) => {
     });
 })
 
-con.connect((err) => {
-    if (err) {
-        console.error('error connecting:', err.stack);
-        return;
-    }
-    console.log('connected as id: '+con.threadId);
-    server.listen(port, '0.0.0.0', () => {
-        console.log(`Node server running on ${port}`);
-        game.beginGame(10,10);
-    });
-})
+// con.connect((err) => {
+//     if (err) {
+//         console.error('error connecting:', err.stack);
+//         return;
+//     }
+//     console.log('connected as id: '+con.threadId);
+//     server.listen(port, '0.0.0.0', () => {
+//         console.log(`Node server running on ${port}`);
+//         game.beginGame(10,10);
+//     });
+// })
+server.listen(port, '0.0.0.0', () => {
+    console.log(`Node server running on ${port}`);
+    game.beginGame(10,10);
+});

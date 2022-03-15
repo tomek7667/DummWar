@@ -8,6 +8,17 @@ class Canvas {
         this.canvas.width  = 1200;
         this.canvas.height = 600;
 
+        this.canvas.addEventListener("click", () => {
+            console.log(this.map.getCellsAdjacent(this.map.getCellUnderTheCursor()));
+
+        });
+
+        this.canvas.addEventListener("mousemove", (event) => {
+            //console.log('mousemove: ' + event.clientX + ', ' + event.clientY)
+            this.map.mousePosition.x = event.clientX;
+            this.map.mousePosition.y = event.clientY;
+        });
+
         this.map = new Map(this.ctx);
     }
 

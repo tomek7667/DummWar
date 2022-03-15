@@ -8,6 +8,8 @@ class Map {
         this.shift = {x: 0, y: 0};
         this.scroll = 3.5;
         this.map = null;
+
+        this.mousePosition = {x: 0, y: 0};
     }
 
     setMap(map) {
@@ -20,8 +22,8 @@ class Map {
 
     draw() {
         if (!this.map) return;
-        for (let x = 0; x < this.size.x; x++) {
-            for (let y = 0; y < this.size.y; y++) {
+        for (let y = 0; y < this.size.y; y++) {
+            for (let x = 0; x < this.size.x; x++) {
                 let cellData;
                 if (!this.map[y][x].cellOwner) {
                     cellData = {color: "gray"};
@@ -40,6 +42,48 @@ class Map {
 
         this.ctx.fillRect(realX, realY, this.cellSize.x * this.scroll, this.cellSize.y * this.scroll);
     }
+
+    getCellUnderTheCursor() {
+        return this.getCellOnThePoint(this.mousePosition.x, this.mousePosition.y);
+    }
+
+    getCellOnThePoint(pointX, pointY) {
+        for (let y = 0; y < this.size.y; y++) {
+            for (let x = 0; x < this.size.x; x++) {
+                let realX = this.shift.x + (x * (this.cellSize.x * this.scroll + this.cellMargin.x * this.scroll) + this.cellMargin.x * this.scroll);
+                let realY = this.shift.y + this.scroll * (y * (this.cellSize.y + this.cellMargin.y) + this.cellMargin.y);
+                let realWidth = this.cellSize.x * this.scroll;
+                let realHeight = this.cellSize.y * this.scroll;
+
+                if (pointX >= realX && pointX <= realX + realWidth) {
+                    if (pointY >= realY && pointY <= realY + realHeight) {
+                        return this.map[y][x];
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    getCellsAdjacent(cell) {
+        let adjacentCells = [];
+        for (let y = -1; y <= 1; y++) {
+            for (let x = -1; x <= 1; x++) {
+                if (cell.y + y >= this.size.y || cell.x + x >= this.size.x) {
+
+                } else {
+                    adjacentCells.push(this.map[cell.y + y][cell.x + x]);
+                }
+            }
+        }
+        return adjacentCells;
+    }
+
+    isCellAdjacent(cellA, cellB) {
+        return (Math.abs(cellA.x - cellB.x) <= 1) && (Math.abs(cellA.y - cellB.y) <= 1);
+    }
+
 }
 
 export { Map };
