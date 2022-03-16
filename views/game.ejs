@@ -56,25 +56,54 @@ if (result) {
     }
 }
 %>
-<div class="homePage__button" onclick="window.location = '/'">
-    <div class="homePage__button--icon fa fa-home"></div>
-</div>
-<div class="gameContainer">
-    <canvas id="gameCanvas"></canvas>
-</div>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     let socket = io();
-    let map;
+    let map, players;
     socket.send({action: "join"});
     socket.emit('join', "<%= result.nickname %>");
     socket.emit('getStatus');
     socket.on('status', (status) => {
         console.log(status);
         map = status.map;
+        players = status.players;
+        globalGameData = status;
+        updateScoreboard(status.size.width*status.size.height);
     })
+
+    let updateScoreboard = (maxScore) => {
+        let winners = [];
+        for (let player in players) {
+            winners.push([players[player].name, players[player].score])
+        }
+        winners.sort((a, b) => {
+            return a[1] - b[1];
+        })
+        console.log(winners);
+        for (let i = 0; i < 7; i++) {
+            if (winners[i]) {
+                let tempScore = parseInt((parseInt(winners[i][1])/maxScore)*100)/100;
+                document.getElementById(`${i}-place`).innerText = `${i+1}. ${winners[i][0]} - ${tempScore}%`;
+            }
+        }
+    }
 </script>
+
+<div class="scoreboard" id="scoreboard">
+    <%
+        for (let i = 0; i < 7; i++) {
+            __append(`<div class="scoreboard__row" id="${i}-place">${i+1}.</div>`)
+        }
+ %>
+</div>
+
+<div class="homePage__button" onclick="window.location = '/'">
+    <div class="homePage__button--icon fa fa-home"></div>
+</div>
+<div class="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+</div>
 <script type="module">
     import { Canvas } from "./javascripts/canvas.js";
     let canvas = new Canvas();

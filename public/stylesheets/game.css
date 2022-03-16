@@ -21,6 +21,7 @@
     transition: .3s;
     cursor: pointer;
     font-size: 35px;
+    z-index: 100;
 }
 
 .homePage__button--icon {
@@ -31,4 +32,24 @@
 
 .homePage__button:hover {
     background-color: #9b9b9b;
+}
+
+.scoreboard {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    height: 250px;
+    width: 220px;
+    background-color: rgba(155, 155, 155, 0.5);
+    border: black 2px solid;
+    border-radius: 20px;
+    z-index: 100;
+    padding: 20px;
+}
+
+.scoreboard__row {
+    height: 30px;
+    display: inline-block;
+    width: 100%;
+    font-size: 20px;
 }

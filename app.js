@@ -1,10 +1,8 @@
 let createError = require('http-errors');
 let express = require('express');
-const mysql = require('mysql');
 const { Server } = require('socket.io');
 let path = require('path');
 let cookieParser = require('cookie-parser');
-let favicon = require('serve-favicon');
 let logger = require('morgan');
 let app = express();
 let game = require('./managers/game').Game;
@@ -13,12 +11,6 @@ const server = http.createServer(app);
 const title = "DummyWar";
 const port = 7780;
 const io = new Server(server);
-// const con = mysql.createConnection({
-//   host     : 'localhost',
-//   user     : 'root',
-//   password : '',
-//   database : 'dummywar'
-// });
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -29,13 +21,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// gets
+// Gets
 
 app.post('/joinGame', function (req, res) {
     if (req.body && req.body.nickname) {
         if (/^[a-zA-Z0-9_]*$/.test(req.body.nickname)) {
-            res.cookie('gameNickname', req.body.nickname, { maxAge: 900000 });
-            res.render('game.ejs', { title: title, result: { success: true, msg: `Joined to the game as ${req.body.nickname}`, nickname: req.body.nickname } })
+            if (game.checkNicknameAvailability(req.body.nickname)) {
+                res.cookie('gameNickname', req.body.nickname, { maxAge: 900000 });
+                res.render('game.ejs', { title: title, result: { success: true, msg: `Joined to the game as ${req.body.nickname}`, nickname: req.body.nickname } })
+            } else {
+                res.render('index', { title: title, result: { success: false, msg: "Nickname already occupied." } });
+            }
         } else {
             res.render('index', { title: title, result: { success: false, msg: "Nickname can only contain a-Z, numbers and '_'." } });
         }
@@ -84,30 +80,26 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         game.removePlayer(socket.id);
         console.log('someone disconnected');
+        io.emit('status', game.getStatus());
     });
     socket.on('join', (nickname) => {
         game.newPlayer(nickname, socket.id);
+        io.emit('status', game.getStatus());
     });
-    socket.on('occupyCell', (result) => {
-        game.occupyCell(game.players[socket.id].color, result.x, result.y);
+    socket.on('occupyCell', (resultCell) => {
+        game.occupyCell(socket.id, resultCell.x, resultCell.y);
         io.emit('status', game.getStatus());
     })
     socket.on('getStatus', () => {
        socket.emit('status', game.getStatus());
     });
+    socket.on('attackCell', (resultCell) => {
+        // zaatakowanie gracza
+
+
+    })
 })
 
-// con.connect((err) => {
-//     if (err) {
-//         console.error('error connecting:', err.stack);
-//         return;
-//     }
-//     console.log('connected as id: '+con.threadId);
-//     server.listen(port, '0.0.0.0', () => {
-//         console.log(`Node server running on ${port}`);
-//         game.beginGame(10,10);
-//     });
-// })
 server.listen(port, '0.0.0.0', () => {
     console.log(`Node server running on ${port}`);
     game.beginGame(10,10);

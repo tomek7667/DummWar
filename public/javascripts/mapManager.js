@@ -1,4 +1,4 @@
-class Map {
+class MapManager {
     constructor(ctx) {
         this.ctx = ctx;
         this.size = {x: 10, y: 10};
@@ -7,36 +7,21 @@ class Map {
 
         this.shift = {x: 0, y: 0};
         this.scroll = 3.5;
-        this.map = null;
-
-        this.mousePosition = {x: 0, y: 0};
-    }
-
-    setMap(map) {
-        this.map = map;
-    }
-
-    update() {
-        if (!this.map) return;
+        this.cells = null;
     }
 
     draw() {
-        if (!this.map) return;
         for (let y = 0; y < this.size.y; y++) {
             for (let x = 0; x < this.size.x; x++) {
-                let cellData;
-                if (!this.map[y][x].cellOwner) {
-                    cellData = {color: "gray"};
-                } else {
-                    cellData = {color: this.map[y][x].cellOwner};
-                }
-                this.drawCell(x, y, cellData);
+                this.drawCell(this.cells[y][x]);
             }
         }
     }
 
-    drawCell(x, y, cellData) {
-        this.ctx.fillStyle = cellData.color;
+    drawCell(cell) {
+        let x = cell.x;
+        let y = cell.y;
+        this.ctx.fillStyle = cell.getColor();
         let realX = this.shift.x + (x * (this.cellSize.x * this.scroll + this.cellMargin.x * this.scroll) + this.cellMargin.x * this.scroll);
         let realY = this.shift.y + this.scroll * (y * (this.cellSize.y + this.cellMargin.y) + this.cellMargin.y);
 
@@ -44,7 +29,7 @@ class Map {
     }
 
     getCellUnderTheCursor() {
-        return this.getCellOnThePoint(this.mousePosition.x, this.mousePosition.y);
+        return this.getCellOnThePoint(gameManager.mousePosition.x, gameManager.mousePosition.y);
     }
 
     getCellOnThePoint(pointX, pointY) {
@@ -54,15 +39,13 @@ class Map {
                 let realY = this.shift.y + this.scroll * (y * (this.cellSize.y + this.cellMargin.y) + this.cellMargin.y);
                 let realWidth = this.cellSize.x * this.scroll;
                 let realHeight = this.cellSize.y * this.scroll;
-
                 if (pointX >= realX && pointX <= realX + realWidth) {
                     if (pointY >= realY && pointY <= realY + realHeight) {
-                        return this.map[y][x];
+                        return this.cells[y][x];
                     }
                 }
             }
         }
-
         return null;
     }
 
@@ -73,7 +56,7 @@ class Map {
                 if (cell.y + y >= this.size.y || cell.x + x >= this.size.x) {
 
                 } else {
-                    adjacentCells.push(this.map[cell.y + y][cell.x + x]);
+                    adjacentCells.push(this.cells[cell.y + y][cell.x + x]);
                 }
             }
         }

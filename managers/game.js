@@ -1,13 +1,25 @@
 let Game = {
     map: [],
     players: {},
+    height: null,
+    width: null,
+    maxScore: null,
     beginGame: function (height, width) {
+        this.height = height;
+        this.width = width;
         for (let y = 0; y < height; y++) {
             this.map.push([]);
             for (let x = 0; x < width; x++) {
                 this.map[y].push(new Cell(x,y));
             }
         }
+        this.maxScore = this.height * this.width;
+    },
+    checkNicknameAvailability: function (nickname) {
+        for (let socketId in this.players) {
+            if (this.players[socketId].name == nickname) return false;
+        }
+        return true;
     },
     newPlayer: function (name, socketId) {
       this.players[socketId] = new Player(name, socketId);
@@ -24,8 +36,24 @@ let Game = {
             this.map[y][x].cellOwner = nickname;
         }
     },
+    calculateScores: function () {
+        this.clearScores();
+        for (let column of this.map) {
+            for (let cell of column) {
+                if (cell.cellOwner) {
+                    this.players[cell.cellOwner].score += 1;
+                }
+            }
+        }
+    },
+    clearScores: function () {
+        for (let player in this.players) {
+           this.players[player].score = 0;
+        }
+    },
     getStatus: function () {
-        return {map: this.map, players: this.players};
+        this.calculateScores();
+        return {map: this.map, players: this.players, size: {width: this.width, height: this.height}};
     }
 }
 
