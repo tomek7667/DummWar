@@ -1,3 +1,5 @@
+import {GameManager} from "./gameManager.js";
+
 class MapManager {
     constructor(ctx) {
         this.ctx = ctx;
@@ -29,7 +31,7 @@ class MapManager {
     }
 
     getCellUnderTheCursor() {
-        return this.getCellOnThePoint(gameManager.mousePosition.x, gameManager.mousePosition.y);
+        return this.getCellOnThePoint(GameManager.mousePosition.x, GameManager.mousePosition.y);
     }
 
     getCellOnThePoint(pointX, pointY) {

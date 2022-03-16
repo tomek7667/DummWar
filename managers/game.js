@@ -53,7 +53,11 @@ let Game = {
     },
     getStatus: function () {
         this.calculateScores();
-        return {map: this.map, players: this.players, size: {width: this.width, height: this.height}};
+        let playersArray = [];
+        for (let i = 0; i < Object.keys(this.players).length; i++) {
+            playersArray.push(this.players[Object.keys(this.players)[i]]);
+        }
+        return {map: this.map, playersArray: playersArray, players: this.players, size: {width: this.width, height: this.height}};
     }
 }
 

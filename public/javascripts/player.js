@@ -1,5 +1,6 @@
 class Player {
     constructor() {
+        console.log("Player constructor")
         this.id = null;
         this.score = 0;
         this.color = "#aaabbb";
@@ -27,3 +28,5 @@ class Player {
         this.name = name;
     }
 }
+
+export { Player };

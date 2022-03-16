@@ -1,5 +1,4 @@
-import { MapManager } from "./mapManager.js";
-import { GameManager } from "./gameManager.js";
+import {GameManager} from "./gameManager.js";
 
 class CanvasManager {
     constructor() {
@@ -32,10 +31,10 @@ class CanvasManager {
     }
 
     draw() { // do naprawienia - michal nie umie programowac obiektowo
-        if (!gameManager || !gameManager.isGameOpen) return;
+        if (!GameManager.isGameOpen) return;
         this.ctx.fillStyle = `blue`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        gameManager.map.draw(); // to nie dziala
+        GameManager.map.draw(); // to nie dziala
     }
 }
 

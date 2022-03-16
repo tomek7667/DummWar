@@ -106,13 +106,14 @@ if (result) {
 </div>
 <script type="module">
     import { GameManager } from "../javascripts/gameManager.js";
-    let gameManager = new GameManager();
+    GameManager.init();
+    //gameManager = new GameManager();
     setInterval(() => {
-        gameManager.update();
-    }, 1000/120)
+        GameManager.update();
+    }, 1000/1)
     setInterval(() => {
-        gameManager.draw();
-    }, 1000/120)
+        GameManager.draw();
+    }, 1000/1)
     // import { Canvas } from "./javascripts/canvasManager.js";
     // let canvas = new Canvas();
     // setInterval(() => {
