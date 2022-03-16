@@ -105,14 +105,22 @@ if (result) {
     <canvas id="gameCanvas"></canvas>
 </div>
 <script type="module">
-    import { Canvas } from "./javascripts/canvas.js";
-    let canvas = new Canvas();
+    import { GameManager } from "../javascripts/gameManager.js";
+    let gameManager = new GameManager();
     setInterval(() => {
-        canvas.update();
+        gameManager.update();
     }, 1000/120)
     setInterval(() => {
-        canvas.draw();
+        gameManager.draw();
     }, 1000/120)
+    // import { Canvas } from "./javascripts/canvasManager.js";
+    // let canvas = new Canvas();
+    // setInterval(() => {
+    //     canvas.update();
+    // }, 1000/120)
+    // setInterval(() => {
+    //     canvas.draw();
+    // }, 1000/120)
 </script>
 
 </body>

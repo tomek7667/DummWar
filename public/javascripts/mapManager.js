@@ -69,4 +69,4 @@ class MapManager {
 
 }
 
-export { Map };
+export { MapManager };
