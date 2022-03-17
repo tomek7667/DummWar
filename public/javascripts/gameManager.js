@@ -49,13 +49,13 @@ class GameManager {
                 y: globalGameData.size.height
             }
 
-            for (let i = 0; i < globalGameData.playersArray.length; i++) {
+            for (let i in globalGameData.players) {
                 let newPlayer = new Player();
-                newPlayer.setId(globalGameData.playersArray[i].socketId);
-                newPlayer.setScore(globalGameData.playersArray[i].score);
-                newPlayer.setColor(globalGameData.playersArray[i].color);
-                newPlayer.setSoldiers(globalGameData.playersArray[i].soldiers);
-                newPlayer.setName(globalGameData.playersArray[i].name);
+                newPlayer.setId(globalGameData.players[i].socketId);
+                newPlayer.setScore(globalGameData.players[i].score);
+                newPlayer.setColor(globalGameData.players[i].color);
+                newPlayer.setSoldiers(globalGameData.players[i].soldiers);
+                newPlayer.setName(globalGameData.players[i].name);
                 GameManager.gameData.players.push(newPlayer);
             }
 

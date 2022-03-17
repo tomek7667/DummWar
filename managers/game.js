@@ -25,6 +25,14 @@ let Game = {
       this.players[socketId] = new Player(name, socketId);
     },
     removePlayer: function (socketId) {
+        for (let column of this.map) {
+            for (let cell of column) {
+                if (cell.cellOwner === socketId) {
+                    cell.cellOwner = null;
+                }
+            }
+        }
+        this.calculateScores();
         delete this.players[socketId];
     },
     endGame: function () {
@@ -53,11 +61,7 @@ let Game = {
     },
     getStatus: function () {
         this.calculateScores();
-        let playersArray = [];
-        for (let i = 0; i < Object.keys(this.players).length; i++) {
-            playersArray.push(this.players[Object.keys(this.players)[i]]);
-        }
-        return {map: this.map, playersArray: playersArray, players: this.players, size: {width: this.width, height: this.height}};
+        return {map: this.map, players: this.players, size: {width: this.width, height: this.height}};
     }
 }
 

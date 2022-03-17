@@ -80,10 +80,9 @@ if (result) {
         winners.sort((a, b) => {
             return a[1] - b[1];
         })
-        console.log(winners);
         for (let i = 0; i < 7; i++) {
             if (winners[i]) {
-                let tempScore = parseInt((parseInt(winners[i][1])/maxScore)*100)/100;
+                let tempScore = parseInt((parseInt(winners[i][1])/maxScore)*10000)/100;
                 document.getElementById(`${i}-place`).innerText = `${i+1}. ${winners[i][0]} - ${tempScore}%`;
             }
         }
