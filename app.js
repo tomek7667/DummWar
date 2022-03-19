@@ -96,11 +96,24 @@ io.on('connection', (socket) => {
     socket.on('attackCell', (resultCell) => {
         // zaatakowanie gracza
 
-
     })
 })
 
 server.listen(port, '0.0.0.0', () => {
     console.log(`Node server running on ${port}`);
-    game.beginGame(10,10);
+    startGame(300,300);
+    setInterval(() => {
+        game.endGame();
+        startGame(300, 300);
+    }, 1000 * 60 * 15);
+
 });
+
+let startGame = (width, height) => {
+    // zaczynamy gre za 10 minut - todo
+    game.beginGame(width,height);
+    setInterval(() => {
+        game.calculateSoldiers();
+        io.emit('status', game.getStatus());
+    }, 500);
+}

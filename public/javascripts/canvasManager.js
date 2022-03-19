@@ -30,7 +30,7 @@ class CanvasManager {
         // }
     }
 
-    draw() { // do naprawienia - michal nie umie programowac obiektowo
+    draw() {
         if (!GameManager.isGameOpen) return;
         this.ctx.fillStyle = `blue`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);

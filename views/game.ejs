@@ -60,7 +60,7 @@ if (result) {
 <script src="/socket.io/socket.io.js"></script>
 <script>
     let socket = io();
-    let map, players;
+    let map, players, globalGameData;
     socket.send({action: "join"});
     socket.emit('join', "<%= result.nickname %>");
     socket.emit('getStatus');
@@ -70,6 +70,7 @@ if (result) {
         players = status.players;
         globalGameData = status;
         updateScoreboard(status.size.width*status.size.height);
+        updateInformation(players[socket.id].soldiers, players[socket.id].score);
     })
 
     let updateScoreboard = (maxScore) => {
@@ -103,6 +104,24 @@ if (result) {
 <div class="gameContainer">
     <canvas id="gameCanvas"></canvas>
 </div>
+<div class="playerInformation__box">
+    <div class="playerInformation__row">
+        <div class="playerInformation__label">Soldiers:</div>
+        <div class="playerInformation__value" id="playerSoldiers">0</div>
+    </div>
+    <div class="playerInformation__row">
+        <div class="playerInformation__label">Score:</div>
+        <div class="playerInformation__value" id="playerScore">0</div>
+    </div>
+</div>
+
+<script>
+    let updateInformation = (soldiers, score) => {
+        document.getElementById('playerSoldiers').innerText = soldiers;
+        document.getElementById('playerScore').innerText = score;
+    }
+</script>
+
 <script type="module">
     import { GameManager } from "../javascripts/gameManager.js";
     GameManager.init();

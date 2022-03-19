@@ -71,15 +71,15 @@ class GameManager {
 
             GameManager.map.cells = GameManager.gameData.cells;
 
-            console.log(GameManager.gameData)
+            // console.log(GameManager.gameData)
         }
     }
 
     static getPlayerById(id) {
         for (let i = 0; i < GameManager.gameData.players.length; i++) {
             if (GameManager.gameData.players[i].id === id) {
-                console.log("Found player:")
-                console.log(GameManager.gameData.players[i]);
+                // console.log("Found player:")
+                // console.log(GameManager.gameData.players[i]);
                 return GameManager.gameData.players[i];
             }
         }

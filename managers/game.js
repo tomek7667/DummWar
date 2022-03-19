@@ -4,7 +4,15 @@ let Game = {
     height: null,
     width: null,
     maxScore: null,
+    gameNumber: null,
+    endGame: function () {
+        console.log(`Ending game with number: ${this.gameNumber}`);
+        this.map = [];
+        this.players = {};
+    },
     beginGame: function (height, width) {
+        this.gameNumber = Math.round(Math.random()*10000);
+        console.log(`Starting game with number: ${this.gameNumber}`);
         this.height = height;
         this.width = width;
         for (let y = 0; y < height; y++) {
@@ -32,20 +40,19 @@ let Game = {
                 }
             }
         }
-        this.calculateScores();
+        this.calculateScoreboard();
         delete this.players[socketId];
     },
-    endGame: function () {
-        this.map = [];
-        this.players = {};
-    },
-    occupyCell: function (nickname, x, y) {
+    occupyCell: function (socketId, x, y) {
         if (!this.map[y][x].cellOwner) {
-            this.map[y][x].cellOwner = nickname;
+            if (this.players[socketId].soldiers === 0) {
+                this.map[y][x].cellOwner = socketId;
+                this.players[socketId].soldiers++;
+            }
         }
     },
-    calculateScores: function () {
-        this.clearScores();
+    calculateScoreboard: function () {
+        this.clearScoreboard();
         for (let column of this.map) {
             for (let cell of column) {
                 if (cell.cellOwner) {
@@ -54,13 +61,21 @@ let Game = {
             }
         }
     },
-    clearScores: function () {
+    calculateSoldiers: function () {
+        for (let player in this.players) {
+            let x = this.players[player].score/this.maxScore;
+            let tempRatio = 1 + Math.pow((5 * x), 1/2);
+            if (this.players[player].soldiers > this.maxScore * 100) continue;
+            this.players[player].soldiers = Math.ceil(this.players[player].soldiers * tempRatio);
+        }
+    },
+    clearScoreboard: function () {
         for (let player in this.players) {
            this.players[player].score = 0;
         }
     },
     getStatus: function () {
-        this.calculateScores();
+        this.calculateScoreboard();
         return {map: this.map, players: this.players, size: {width: this.width, height: this.height}};
     }
 }
@@ -75,7 +90,7 @@ class Cell {
 
 class Player {
     score = 0;
-    soldiers = 100;
+    soldiers = 0;
     constructor(name, socketId) {
         this.name = name;
         this.socketId = socketId;
