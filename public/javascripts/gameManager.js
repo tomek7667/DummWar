@@ -19,6 +19,7 @@ class GameManager {
 
         GameManager.canvasManager.canvas.addEventListener("click", () => {
             let clickedCell = GameManager.map.getCellUnderTheCursor();
+            console.log(`x: ${clickedCell.x}, y: ${clickedCell.y}`);
             if (clickedCell && !clickedCell.cellOwner) {
                 socket.emit('occupyCell', clickedCell);
             } else if (clickedCell) {
@@ -90,6 +91,7 @@ class GameManager {
         GameManager.updateGameData();
         if (!GameManager.isGameOpen) return;
         GameManager.canvasManager.update();
+        GameManager.map.update();
     }
 
     static draw() {

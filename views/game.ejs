@@ -65,7 +65,7 @@ if (result) {
     socket.emit('join', "<%= result.nickname %>");
     socket.emit('getStatus');
     socket.on('status', (status) => {
-        console.log(status);
+        //console.log(status);
         map = status.map;
         players = status.players;
         globalGameData = status;
@@ -128,10 +128,10 @@ if (result) {
     //gameManager = new GameManager();
     setInterval(() => {
         GameManager.update();
-    }, 1000/1)
+    }, 1000/120)
     setInterval(() => {
         GameManager.draw();
-    }, 1000/1)
+    }, 1000/120)
     // import { Canvas } from "./javascripts/canvasManager.js";
     // let canvas = new Canvas();
     // setInterval(() => {
